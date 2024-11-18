@@ -1,0 +1,31 @@
+<!-- <ion-card>
+  <ion-list lines="full">
+    <ion-item>
+      <ion-input clearInput="true" label="Nombre" labelPlacement="floating" type="string" [(ngModel)]="tarea.Nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-select placeholder="Selecciona estado" label="Completada" labelPlacement="floating" [(ngModel)]="tarea.Completada">
+        <ion-select-option [value]="true">Completada</ion-select-option>
+        <ion-select-option [value]="false">Pendiente</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item>
+      <ion-label>Fecha de cumplimiento:</ion-label>
+      <ion-datetime locale="es-ES" hourCycle="h12" [showDefaultButtons]="false" [(ngModel)]="tarea.Fecha" presentation="date-time">
+        <ion-buttons slot="buttons">
+          <ion-button color="danger" (click)="resetFecha()">Resetea</ion-button>
+        </ion-buttons>
+      </ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-select placeholder="Selecciona alumno" label="Asignado a" labelPlacement="floating" [(ngModel)]="tarea.Asignado">
+        <ion-select-option *ngFor="let user of estudiantes" [value]="user.nombre">{{user.nombre}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-button (click)="guardarTarea()">
+      <ion-icon slot="icon-only, end" name="save" color="primary"></ion-icon>
+      <ion-label>Guardar</ion-label>
+    </ion-button>
+    <ion-button color="light" (click)="cerrarModal()">Cancelar</ion-button>
+  </ion-list>
+</ion-card> -->

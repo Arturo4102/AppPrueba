@@ -7,23 +7,73 @@
 <ion-content [fullscreen]="true">
   <ion-spinner *ngIf="cargando" name="bubbles" style="display: block; margin: auto;"></ion-spinner>
 
+    <ion-card *ngIf="showForm">
+    <ion-list lines="full">
+      <!-- Nombre -->
+      <ion-item>
+        <ion-input clearInput="true" label="Nombre" labelPlacement="floating"  type="string"[(ngModel)]="newTarea.Nombre"></ion-input>
+      </ion-item>
+      <!-- Completada -->
+      <ion-item>
+        <ion-select placeholder="Selecciona estado" label="Completada" labelPlacement="floating" [(ngModel)]="newTarea.Completada">
+          <ion-select-option [value]="true">Completada</ion-select-option>
+          <ion-select-option [value]="false">Pendiente</ion-select-option>
+        </ion-select>
+        </ion-item>
+
+        <!-- OPCIÓN PARA NO PONER FECHA -->
+      <!-- Fecha de cumplimiento-->
+      <ion-item>
+        <ion-label>Fecha de cumplimiento:</ion-label>
+        <ion-datetime #datetime locale="es-ES" hourCycle="h12" [showDefaultButtons]="false" [(ngModel)]="newTarea.Fecha" presentation="date-time">
+          <ion-buttons slot="buttons">
+            <ion-button color="danger" (click)="datetime.reset()">Resetea</ion-button>
+          </ion-buttons>
+        </ion-datetime>
+      </ion-item>
+      
+      
+
+      <!-- Asignado al alumno -->
+      <ion-item>
+        <ion-select placeholder="Selecciona alumno" label="Asignado a" labelPlacement="floating" [(ngModel)]="newTarea.Asignado">
+          <ion-select-option *ngFor="let user of students" [value]="user.nombre">{{user.nombre}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      
+      <ion-buttons slot="buttons">
+        <ion-button (click)="addTarea()" shape="round" color="primary">Añadir tarea</ion-button>
+        <ion-button (click)="toggleForm()" shape="round" color="danger">Cancelar</ion-button>
+      </ion-buttons>
+    </ion-list>
+  </ion-card>
+
+
   <ion-grid>
     <ion-row>
       <ion-col>
         <ion-toolbar>
           <ion-title>Tareas:</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="addTarea()">
+          @if(!showForm) {
+            <ion-buttons slot="end">
+            <ion-button  (click)="toggleForm()">
               <ion-icon slot="icon-only" name="add-circle-outline" color="primary"></ion-icon>
-            </ion-button> 
-          </ion-buttons>
+            </ion-button> </ion-buttons>
+        }
+
+
         </ion-toolbar>
         <ion-list>
         @for (tarea of tareas; track $index) {
         <ion-item>
           <ion-label>Nombre: {{tarea.Nombre}}
             <p>Completada: {{tarea.Completada}}</p>
-            <!-- <p>Fecha: {{tarea.Fecha.toDate() | date}}</p> -->
+            @if(tarea.Fecha) {
+            <p>Fecha: {{tarea.Fecha.toDate() | date}}</p>
+            }
+            @if(tarea.Asignado) {
+              <p>Asignado a: {{tarea.Asignado}}</p>
+              }
           </ion-label>
       
           <ion-buttons slot="end">

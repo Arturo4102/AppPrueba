@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonList , IonItem, IonCard, IonInput, IonButton, IonSpinner, IonIcon, IonButtons, IonGrid, IonRow, IonCol } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 import { ProfI } from '../../common/models/profesor.models';
 import { FirestoreService } from '../../common/services/firestore.service';
 import { UserI } from '../../common/models/users.models';
@@ -7,14 +7,14 @@ import { FormsModule } from '@angular/forms';
 import { IoniconsModule } from '../../common/modules/ionicons.module';
 import { CommonModule } from '@angular/common';
 import { TareaI } from 'src/app/common/models/tarea.models';
+import { doc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-home-administrador',
   templateUrl: './home-administrador.page.html',
   styleUrls: ['./home-administrador.page.scss'],
   standalone: true,
-  imports: [IonCol, IonRow, IonGrid, IonButtons, IonIcon, IonSpinner, IonButton, IonInput, IonCard, IonHeader, IonToolbar, IonTitle,
-    IonContent, IonList, IonLabel, IonItem, FormsModule, IonButton, IonSpinner, IoniconsModule, CommonModule],
+  imports: [IonicModule, FormsModule, IoniconsModule, CommonModule],
 })
 
 
@@ -32,6 +32,10 @@ export class HomeAdministradorPage {
   tareas: TareaI[] = [];
   newTarea: TareaI;
   tarea: TareaI;
+  selectedStudent: UserI; // Estudiante al que se asignará la tarea
+
+  showForm = false; // Variable para mostrar/ocultar el formulario de tarea
+
 
   constructor(private firestoreService: FirestoreService) {
     //Profs
@@ -78,16 +82,9 @@ async addprof(){
     this.cargando = true;
     await this.firestoreService.createDocumentID(this.newProf, 'Profesores', this.newProf.id);
     this.cargando = false;
-    this.cleanInterface();
+    // this.cleanInterface();
   }
   
-  cleanInterface(){ 
-    this.newProf.Nombre = null;
-    this.newProf.Edad = null;
-    this.newProf.Password = null;
-    this.newProf.Administrativo = null;
-  }
-
 
   edit(prof: ProfI){
     console.log('edit -> ', prof);
@@ -136,7 +133,7 @@ async addprof(){
     this.cargando = true;
     await this.firestoreService.createDocumentID(this.newStud, 'Usuarios', this.newStud.id);
     this.cargando = false;
-    this.cleanInterface();
+    // this.cleanInterface();
   }
 
   editStu(student: UserI){
@@ -160,11 +157,12 @@ async addprof(){
   // Tareas section
 
   initTarea(){
-    this.tarea = {
+    this.newTarea = {
       id: this.firestoreService.createIDDoc(),
       Nombre: null,
       Completada: null,
-      Fecha: null,
+      Fecha: null, // Fecha y hora actuales
+      Asignado: null,
     }
   }
 
@@ -177,13 +175,22 @@ async addprof(){
   });
   }
 
-  addTarea(){
-    console.log('add -> ', this.newTarea);
+  async saveTarea() {    
+    this.cargando = true;
+    if (this.selectedStudent) {
+      this.newTarea.Asignado = doc(this.firestoreService.firestore, 'Usuarios', this.selectedStudent.id);
+    }
+    await this.firestoreService.createDocumentID(this.newTarea, 'Tareas', this.newTarea.id); // Aquí se corrige `this.newStud`
+    this.cargando = false;
   }
 
-  editTarea(tarea: TareaI){
-    console.log('edit -> ', tarea);
-    this.newTarea = tarea;  }
+  async getStudentFromTarea(tarea: TareaI) {
+    if (tarea.Asignado) {
+      const userPath = tarea.Asignado.path;
+      const usuario = await this.firestoreService.getDocument<UserI>(userPath);
+      console.log('Usuario asignado:', usuario);
+    }
+  }
 
   async deleteTarea(tarea: TareaI){
     this.cargando = true;
@@ -191,18 +198,41 @@ async addprof(){
     await this.firestoreService.deleteDocumentID('Tareas', tarea.id);
     this.cargando = false;
   }
-  
+
   async getTarea(){
     const res = await this.firestoreService.getDocument<TareaI>('Tareas/'+ this.newTarea.id);
     this.tarea = res.data();
   }
+  
+  editTarea(tarea: TareaI){
+    console.log('edit -> ', tarea);
+    this.newTarea = tarea;  }
 
-  async saveTarea(){
-    this.cargando = true;
-    await this.firestoreService.createDocumentID(this.newStud, 'Tareas', this.newTarea.id);
-    this.cargando = false;
-    this.cleanInterface();
+  
+
+  async addTarea(){
+      this.cargando = true;
+      await this.firestoreService.createDocumentID(this.newTarea, 'Tareas', this.newTarea.id);
+      this.showForm = false;  // Oculta el formulario después de guardar
+      this.cleanInterfaceTarea();
+      this.cargando = false;
+      // this.cleanInterface();
+     }
+    
+ 
+     // Método para mostrar y ocultar el formulario de tarea
+  toggleForm() {
+    console.log('toggleForm activated');
+    this.showForm = !this.showForm;
+  } 
+
+  cleanInterfaceTarea(){ 
+    this.newTarea.Nombre = null;
+    this.newTarea.Asignado = null;
+    this.newTarea.Completada = null;
+    this.newTarea.Fecha = null;
   }
+
   // ChangePassword() {
   //   this.navCtrl.navigateForward('/change-password');
   // }
