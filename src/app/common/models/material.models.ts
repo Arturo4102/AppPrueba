@@ -10,5 +10,6 @@ export interface MaterialI {
   };
 }
 
-// Sobra un color y un tamano
-// Debería tener un pictogramId
+// Sobra un color y un tamano, si siempre se van a llamar igual yo dejaría los de fuera del array
+// Yo pondría también un pictograma ID para poder obtener la imagen del pictograma, no sé como hacer para que te obtenga el primero relacionado con el nombre
+

@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonList, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonModal, IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonFooter, IonImg } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonList, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonModal, IonButtons, IonIcon, IonGrid, IonRow, IonCol, IonFooter, IonImg, IonItem, IonLabel } from '@ionic/angular/standalone';
 import { Class } from '../../../common/models/class.models';
 import { MenuType, Menu } from '../../../common/models/menu.models';
 import { StudentI } from 'src/app/common/models/student.models';
@@ -20,7 +20,7 @@ import { CelebracionComponent } from "../../../shared/celebracion/celebracion.co
   templateUrl: './task-menus.page.html',
   styleUrls: ['./task-menus.page.scss'],
   standalone: true,
-  imports: [IonImg, IonFooter, IonCol, IonRow, IonGrid, IonIcon, IonModal, IonCardTitle, IonCardContent, IonCard, IonList, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, CelebracionComponent]
+  imports: [IonLabel, IonItem, IonImg, IonFooter, IonCol, IonRow, IonGrid, IonIcon, IonModal, IonCardTitle, IonCardContent, IonCard, IonList, IonButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, CelebracionComponent]
 })
 export class TaskMenusPage implements OnInit {
   @ViewChild(CelebracionComponent) celebracionComponent!: CelebracionComponent;
