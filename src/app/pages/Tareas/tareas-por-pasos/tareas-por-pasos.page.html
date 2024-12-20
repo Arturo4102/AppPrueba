@@ -39,20 +39,33 @@
         <ion-card class="step" *ngIf="this.descripcion.steps && this.descripcion.steps.length > 0">
           <ion-img
             class="step-image"
-            *ngIf="this.currentStep.pictogramId"
+            *ngIf="this.currentStep.pictogramId && this.visualization !== 'Vídeo'"
             [src]="'https://api.arasaac.org/api/pictograms/' + this.currentStep.pictogramId"
             alt="Pictograma del paso">
           </ion-img>
 
           <ion-img
             class="step-image"
-            *ngIf="!this.currentStep.pictogramId && this.currentStep.imageUrl && this.currentStep.imageUrl !== '' "
+            *ngIf="!this.currentStep.pictogramId
+                  && this.currentStep.imageUrl
+                  && this.currentStep.imageUrl !== '' 
+                  && this.visualization !== 'Vídeo'"
             [src]="this.currentStep.imageUrl"
             alt="Imagen del paso">
           </ion-img>
 
-          <ion-card-content>
-            <h1 *ngIf="this.visualization !== 'Imagen'" class="descripcion-tarea"> {{ this.currentStep.text }} </h1>
+          <ion-card-content class="step-description">
+            <h1 *ngIf="this.visualization !== 'Imagen' && this.visualization !== 'Vídeo'" class="descripcion-tarea">
+              {{ this.currentStep.text }}
+            </h1>
+
+            <a
+            href=" {{ this.currentStep.videoUrl }} "
+            *ngIf="this.currentStep.videoUrl && this.visualization === 'Vídeo'"
+            target="_blank"
+            class="link-step">
+              Vídeo
+            </a>
 
             <div class="button-container">
               <ion-button

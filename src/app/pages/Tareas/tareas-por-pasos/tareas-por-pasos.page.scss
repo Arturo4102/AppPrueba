@@ -35,6 +35,7 @@
   font-weight: bold;
   //margin-top: 8px;
   text-align: center;
+  margin: auto;
 }
 
 .step {
@@ -44,11 +45,27 @@
   //display: flex;
 }
 
+.step-description {
+  margin: auto;
+  //align-items: center;
+  //display: flex;
+}
+
 .step-image {
   height: 300px;
 }
 
+.link-step {
+  font-size: 24pt;
+  font-weight: bold;
+  margin: auto;
+  margin: 0 auto;
+  display:block;
+  text-align: center
+}
+
 .button-container {
+  width: 100%;
   display: flex;
   margin-top: 16px;
 }

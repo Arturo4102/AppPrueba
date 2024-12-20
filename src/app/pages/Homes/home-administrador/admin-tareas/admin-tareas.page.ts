@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, SecurityContext } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { TeacherI } from 'src/app/common/models/teacher.models';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
@@ -23,6 +23,7 @@ import { takeUntil } from 'rxjs';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { LOCALE_ID } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 registerLocaleData(localeEs);
 
@@ -82,6 +83,8 @@ export class AdminTareasPage{
   newStep: StepI;
   newStepDescription: string;
   newStepImageLink: string;
+  newStepVideoLink: string;
+  sanitizer: DomSanitizer;
   
   //Formularios
   showTaskForm: boolean = false;
@@ -774,7 +777,10 @@ export class AdminTareasPage{
 
   // Añadir paso
   addStep() {
-    if ( (this.newStepImageLink != undefined && this.newStepImageLink.trim() !== '') || this.newStep.pictogramId != null) {
+    if ( (this.newStepImageLink != undefined && this.newStepImageLink.trim() !== '')
+      || (this.newStepVideoLink != undefined && this.newStepVideoLink.trim() !== '')
+      || this.newStep.pictogramId != null) 
+      {
       if (!this.newTaskDescription.steps) {
         this.newTaskDescription.steps = [];
       }
@@ -785,6 +791,10 @@ export class AdminTareasPage{
       
       if (this.newStepImageLink != undefined && this.newStepImageLink.trim() !== '') this.newStep.imageUrl = this.newStepImageLink.trim()
 
+      if (this.newStepVideoLink != undefined && this.newStepVideoLink.trim() !== '') this.newStep.videoUrl = this.newStepVideoLink.trim()
+      // console.log(this.newStepVideoLink.trim())
+        // this.newStep.videoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.newStepVideoLink.trim()) as string;
+
       // Añadimos nuevo paso
       this.newTaskDescription.steps.push(this.newStep)
 
@@ -794,6 +804,7 @@ export class AdminTareasPage{
       this.newStep = this.taskService.initStep();
       this.newStepDescription = ''
       this.newStepImageLink = ''
+      this.newStepVideoLink = ''
     }
   }
 
